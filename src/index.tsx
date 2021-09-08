@@ -8,10 +8,16 @@ import reportWebVitals from 'reportWebVitals';
 import 'index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import { FirebaseProvider } from 'contexts/firebase';
+import FirebaseService from 'services/Firebase';
+import config from 'config';
+
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <App />
+      <FirebaseProvider value={new FirebaseService(config.firebase)}>
+        <App />
+      </FirebaseProvider>
     </Router>
   </React.StrictMode>,
   document.getElementById('root')

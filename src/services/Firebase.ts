@@ -1,13 +1,31 @@
-import {
-  initializeApp,
-  FirebaseApp as App,
-  FirebaseOptions as Options
-} from 'firebase/app';
-
+import firebase from 'firebase/app';
+import 'firebase/auth';
 export default class Firebase {
-  public app: App;
+  private app: firebase.app.App;
+  private auth: firebase.auth.Auth;
 
-  constructor(config: Options) {
-    this.app = initializeApp(config);
+  constructor(config: Object) {
+    this.app = firebase.initializeApp(config);
+    this.auth = firebase.auth();
+  }
+
+  createUser(email: string, password: string) {
+    return this.auth.createUserWithEmailAndPassword(email, password);
+  }
+
+  signIn(email: string, password: string) {
+    return this.auth.signInWithEmailAndPassword(email, password);
+  }
+  
+  signOut() {
+    return this.auth.signOut();
+  }
+
+  resetPassword(email: string) {
+    return this.auth.sendPasswordResetEmail(email);
+  }
+
+  changePassword(password: string) {
+    return this.auth.currentUser?.updatePassword(password);
   }
 }
