@@ -19,7 +19,7 @@ const App: FC = () => (
   <div className="app">
     <Navigation />
 
-    <Container>
+    <Container className="mt-3">
       <Route exact path={ROUTES.LANDING} component={Landing} />
       <Route path={ROUTES.SIGN_IN} component={SignIn} />
       <Route path={ROUTES.SIGN_UP} component={SignUp} />
