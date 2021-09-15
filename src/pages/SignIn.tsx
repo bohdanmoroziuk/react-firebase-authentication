@@ -5,6 +5,7 @@ import Column from 'react-bootstrap/Col';
 
 import SignInForm from 'components/SignInForm';
 import SignUpLink from 'components/SignUpLink';
+import PasswordForgetLink from 'components/PasswordForgetLink';
 
 const SignIn: FC = () => {
   return (
@@ -14,6 +15,7 @@ const SignIn: FC = () => {
           <h2>Sign In</h2>
 
           <SignInForm />
+          <PasswordForgetLink />
           <SignUpLink />
         </Column>
       </Row>
