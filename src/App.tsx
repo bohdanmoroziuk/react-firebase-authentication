@@ -13,6 +13,7 @@ import PasswordForget from 'pages/PasswordForget';
 
 import Navigation from 'components/Navigation';
 
+import { UserProvider } from 'contexts/user';
 import FirebaseService from 'services/Firebase';
 import withFirebase from 'hocs/withFirebase';
 
@@ -57,19 +58,21 @@ export class App extends Component<Props, State> {
     } = this;
 
     return (
-      <div className="app">
-        <Navigation user={user}  />
-    
-        <Container className="mt-3">
-          <Route exact path={ROUTES.LANDING} component={Landing} />
-          <Route path={ROUTES.SIGN_IN} component={SignIn} />
-          <Route path={ROUTES.SIGN_UP} component={SignUp} />
-          <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForget} />
-          <Route path={ROUTES.HOME} component={Home} />
-          <Route path={ROUTES.ACCOUNT} component={Account} />
-          <Route path={ROUTES.ADMIN} component={Admin} />
-        </Container>
-      </div>
+      <UserProvider value={user}>
+        <div className="app">
+          <Navigation />
+      
+          <Container className="mt-3">
+            <Route exact path={ROUTES.LANDING} component={Landing} />
+            <Route path={ROUTES.SIGN_IN} component={SignIn} />
+            <Route path={ROUTES.SIGN_UP} component={SignUp} />
+            <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForget} />
+            <Route path={ROUTES.HOME} component={Home} />
+            <Route path={ROUTES.ACCOUNT} component={Account} />
+            <Route path={ROUTES.ADMIN} component={Admin} />
+          </Container>
+        </div>
+      </UserProvider>
     );
   }
 }

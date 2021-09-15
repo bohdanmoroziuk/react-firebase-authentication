@@ -8,6 +8,8 @@ import Container from 'react-bootstrap/Container';
 
 import SignOutButton from 'components/SignOutButton';
 
+import withUser from 'hocs/withUser';
+
 import * as ROUTES from 'constants/routes';
 
 interface Props {
@@ -40,8 +42,8 @@ const NavigationNonAuth: FC = () => (
   </Navbar>
 );
 
-const Navigation: FC<Props> = ({ user }) => {
+export const Navigation: FC<Props> = ({ user }) => {
   return user ? <NavigationAuth /> : <NavigationNonAuth />;
 };
 
-export default Navigation;
+export default withUser(Navigation);
