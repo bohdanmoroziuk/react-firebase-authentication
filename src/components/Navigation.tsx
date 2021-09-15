@@ -8,13 +8,9 @@ import Container from 'react-bootstrap/Container';
 
 import SignOutButton from 'components/SignOutButton';
 
-import withUser from 'hocs/withUser';
+import { useFirebase } from 'contexts/firebase';
 
 import * as ROUTES from 'constants/routes';
-
-interface Props {
-  user: unknown;
-}
 
 const NavigationAuth: FC = () => (
   <Navbar bg="light" variant="light">
@@ -42,8 +38,12 @@ const NavigationNonAuth: FC = () => (
   </Navbar>
 );
 
-export const Navigation: FC<Props> = ({ user }) => {
-  return user ? <NavigationAuth /> : <NavigationNonAuth />;
+const Navigation: FC = () => {
+  const { user } = useFirebase();
+
+  return user 
+    ? <NavigationAuth /> 
+    : <NavigationNonAuth />;
 };
 
-export default withUser(Navigation);
+export default Navigation;

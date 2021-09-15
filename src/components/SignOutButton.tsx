@@ -2,21 +2,24 @@ import { FC } from 'react';
 
 import Button from 'react-bootstrap/Button';
 
-import FirebaseService from 'services/Firebase';
-import withFirebase from 'hocs/withFirebase';
+import { useFirebase } from 'contexts/firebase';
 
-export interface Props {
-  firebase: FirebaseService;
-}
+export const SignOutButton: FC = () => {
+  const { firebase } = useFirebase();
 
-export const SignOutButton: FC<Props> = ({ firebase }) => (
-  <Button
-    type="button"
-    variant="primary"
-    onClick={() => firebase.signOut()}
-  >
-    Sign Out
-  </Button>
-);
+  const handleSignOut = async () => {
+    await firebase.signOut();
+  };
 
-export default withFirebase(SignOutButton);
+  return (
+    <Button
+      type="button"
+      variant="primary"
+      onClick={handleSignOut}
+    >
+      Sign Out
+    </Button>
+  );
+};
+
+export default SignOutButton;

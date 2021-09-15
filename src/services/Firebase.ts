@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
+
 export default class Firebase {
   private app: firebase.app.App;
   private auth: firebase.auth.Auth;

@@ -1,6 +1,6 @@
-import { ChangeEvent, Component, FormEvent } from 'react';
+import { ChangeEvent, FormEvent, FC, useState } from 'react';
 
-import { withRouter } from 'react-router';
+import { useHistory } from 'react-router';
 
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/Button';
 import * as R from 'ramda';
 
 import FirebaseService from 'services/Firebase';
-import withFirebase from 'hocs/withFirebase';
+import { useFirebase } from 'contexts/firebase';
 import * as ROUTES from 'constants/routes';
 
 export interface State {
@@ -28,112 +28,100 @@ export const initialState = {
   error: null,
 };
 
-export class SignInFormBase extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
+const SignInForm: FC = () => {
+  const [state, setState] = useState<State>(initialState);
 
-    this.state = { ...initialState };
-  }
+  const { firebase } = useFirebase();
 
-  get isValid() {
-    return R.all(
-        R.pipe(R.isEmpty, R.not),
-        R.values(R.pick(['email', 'password'], this.state))
-      );
-  }
+  const history = useHistory();
 
-  get isInvalid() {
-    return R.not(this.isValid);
-  }
+  const isValid = R.all(
+    R.pipe(R.isEmpty, R.not),
+    R.values(R.pick(['email', 'password'], state))
+  );
 
-  handleReset = () => {
-    this.setState(initialState);
+  const isInvalid = R.not(isValid);
+
+  const resetState = () => {
+    setState(initialState);
   };
 
-  handleSubmit = (event: FormEvent) => {
+  const updateState = (changes: Partial<State>) => {
+    setState((previousState) => ({
+      ...previousState,
+      ...changes,
+    }));
+  };
+
+  const handleReset = () => {
+    resetState();
+  };
+
+  const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
 
-    const { email, password } = this.state;
+    const { email, password } = state;
 
-    this.props.firebase.signIn(email, password)
+    firebase.signIn(email, password)
       .then(() => {
-        this.setState({ ...initialState });
-        this.props.history.push(ROUTES.HOME);
+        resetState();
+        history.push(ROUTES.HOME);
       })
       .catch((error) => {
-        this.setState({ error });
+        updateState({ error });
       });
   }
 
-  handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    this.setState((previousState) => ({
-      ...previousState,
-      [event.target.name]: event.target.value,
-    }));
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    updateState({ [event.target.name]: event.target.value });
   }
 
-  render() {
-    const {
-      state: {
-        email,
-        password,
-        error,
-      },
-      isInvalid,
-      handleReset,
-      handleChange,
-      handleSubmit,
-    } = this;
+  return (
+    <Form
+      className="my-3"
+      onReset={handleReset}
+      onSubmit={handleSubmit}
+    >
+      <Form.Group className="mb-3" controlId="email">
+        <Form.Label>Email</Form.Label>
+        <Form.Control
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={state.email}
+          onChange={handleChange}
+        />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="password">
+        <Form.Label>Password</Form.Label>
+        <Form.Control
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={state.password}
+          onChange={handleChange}
+        />
+      </Form.Group>
 
-    return (
-      <Form
-        className="my-3"
-        onReset={handleReset}
-        onSubmit={handleSubmit}
+      <Button
+        variant="primary"
+        type="submit"
+        style={{ marginRight: '1rem' }}
+        disabled={isInvalid}  
       >
-        <Form.Group className="mb-3" controlId="email">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={email}
-            onChange={handleChange}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="password">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={password}
-            onChange={handleChange}
-          />
-        </Form.Group>
+        Sign In
+      </Button>
+      <Button variant="secondary" type="reset">
+        Reset
+      </Button>
 
-        <Button
-          variant="primary"
-          type="submit"
-          style={{ marginRight: '1rem' }}
-          disabled={isInvalid}  
-        >
-          Sign In
-        </Button>
-        <Button variant="secondary" type="reset">
-          Reset
-        </Button>
-
-        {error && (
-          <p className="text-danger mt-3">
-            {error.message}
-          </p>
-        )}
-      </Form>
-    );
-  }
-}
-
-const SignInForm = withRouter(withFirebase(SignInFormBase));
+      {state.error && (
+        <p className="text-danger mt-3">
+          {state.error.message}
+        </p>
+      )}
+    </Form>
+  );
+};
 
 export default SignInForm;

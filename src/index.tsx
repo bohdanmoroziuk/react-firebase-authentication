@@ -9,13 +9,13 @@ import 'index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { FirebaseProvider } from 'contexts/firebase';
-import FirebaseService from 'services/Firebase';
+
 import config from 'config';
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <FirebaseProvider value={new FirebaseService(config.firebase)}>
+      <FirebaseProvider config={config.firebase}>
         <App />
       </FirebaseProvider>
     </Router>
