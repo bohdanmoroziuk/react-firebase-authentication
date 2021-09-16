@@ -1,10 +1,18 @@
 import { createContext, useContext, FC, useState, useEffect } from 'react';
 
+import { useHistory } from 'react-router-dom';
+
 import FirebaseService from 'services/Firebase';
 
+import * as ROUTES from 'constants/routes';
+
 export type User = 
- | {}
- | null;
+  | 
+    {
+      email: string;
+    }
+  | 
+    null;
 export interface Value {
   firebase: FirebaseService;
   user: User;
@@ -20,6 +28,22 @@ export const FirebaseConsumer = FirebaseContext.Consumer;
 
 export const useFirebase = () => useContext(FirebaseContext);
 
+export const useAuthorization = (condition: (user: User) => boolean) => {
+  const { firebase } = useFirebase();
+
+  const history = useHistory();
+
+  useEffect(() => {
+    const listener = firebase.onAuthStateChange((user) => {
+      if (!condition(user as User)) {
+        history.push(ROUTES.SIGN_IN);
+      }
+    });
+
+    return () => listener();
+  }, [condition, firebase, history]);
+};
+
 const instances = new WeakMap();
 
 const initialize = (config: Object) => { 
@@ -31,7 +55,7 @@ const initialize = (config: Object) => {
 };
 
 export const FirebaseProvider: FC<Props> = ({ config, children }) => {
-  const [user, setUser] = useState<User>({});
+  const [user, setUser] = useState<User>(null);
 
   const firebase = initialize(config);
 

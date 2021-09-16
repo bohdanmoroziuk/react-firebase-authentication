@@ -1,15 +1,11 @@
 import { ChangeEvent, FC, FormEvent, useState } from 'react';
 
-import { useHistory } from 'react-router';
-
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 import * as R from 'ramda';
 
 import { useFirebase } from 'contexts/firebase';
-
-import * as ROUTES from 'constants/routes';
 
 export interface State {
   password: string;
