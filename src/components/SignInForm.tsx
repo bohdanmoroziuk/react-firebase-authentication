@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/Button';
 import * as R from 'ramda';
 
 import FirebaseService from 'services/Firebase';
-import { useFirebase } from 'contexts/firebase';
+import { useAuthentication} from 'contexts/firebase';
 import * as ROUTES from 'constants/routes';
 
 export interface State {
@@ -31,7 +31,7 @@ export const initialState = {
 const SignInForm: FC = () => {
   const [state, setState] = useState<State>(initialState);
 
-  const { firebase } = useFirebase();
+  const auth = useAuthentication();
 
   const history = useHistory();
 
@@ -62,7 +62,7 @@ const SignInForm: FC = () => {
 
     const { email, password } = state;
 
-    firebase.signIn(email, password)
+    auth.signIn(email, password)
       .then(() => {
         resetState();
         history.push(ROUTES.HOME);

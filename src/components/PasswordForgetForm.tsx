@@ -3,7 +3,7 @@ import { FC, useState, ChangeEvent, FormEvent } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-import { useFirebase } from 'contexts/firebase';
+import { useAuthentication } from 'contexts/firebase';
 
 export interface State {
   email: string;
@@ -18,7 +18,7 @@ const initialState = {
 const PasswordForgetForm: FC = () => {
   const [state, setState] = useState<State>(initialState);
 
-  const { firebase } = useFirebase();
+  const auth = useAuthentication();
 
   const isInvalid = state.email.trim() === '';
 
@@ -42,7 +42,7 @@ const PasswordForgetForm: FC = () => {
 
     const { email } = state;
 
-    firebase.resetPassword(email)
+    auth.resetPassword(email)
       .then(() => {
         resetState();
       })

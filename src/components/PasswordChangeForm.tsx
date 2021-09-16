@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 
 import * as R from 'ramda';
 
-import { useFirebase } from 'contexts/firebase';
+import { useAuthentication } from 'contexts/firebase';
 
 export interface State {
   password: string;
@@ -22,7 +22,7 @@ export const initialState = {
 export const PasswordChangeForm: FC = () => {
   const [state, setState] = useState<State>(initialState);
 
-  const { firebase } = useFirebase();
+  const auth = useAuthentication();
 
   const resetState = () => {
     setState(initialState);
@@ -47,7 +47,7 @@ export const PasswordChangeForm: FC = () => {
 
     const { password } = state;
 
-    firebase.changePassword(password)
+    auth.changePassword(password)
       .then(() => {
         resetState();
       })

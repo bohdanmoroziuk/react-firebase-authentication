@@ -2,13 +2,13 @@ import { FC } from 'react';
 
 import Button from 'react-bootstrap/Button';
 
-import { useFirebase } from 'contexts/firebase';
+import { useAuthentication } from 'contexts/firebase';
 
 export const SignOutButton: FC = () => {
-  const { firebase } = useFirebase();
+  const auth = useAuthentication();
 
   const handleSignOut = async () => {
-    await firebase.signOut();
+    await auth.signOut();
   };
 
   return (

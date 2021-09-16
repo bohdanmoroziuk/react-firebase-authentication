@@ -8,7 +8,7 @@ import Container from 'react-bootstrap/Container';
 
 import SignOutButton from 'components/SignOutButton';
 
-import { useFirebase } from 'contexts/firebase';
+import { useUser } from 'contexts/firebase';
 
 import * as ROUTES from 'constants/routes';
 
@@ -39,7 +39,7 @@ const NavigationNonAuth: FC = () => (
 );
 
 const Navigation: FC = () => {
-  const { user } = useFirebase();
+  const user = useUser();
 
   return user 
     ? <NavigationAuth /> 

@@ -26,7 +26,25 @@ export const FirebaseContext = createContext({} as Value);
 
 export const FirebaseConsumer = FirebaseContext.Consumer;
 
-export const useFirebase = () => useContext(FirebaseContext);
+const useFirebase = () => useContext(FirebaseContext);
+
+export const useUser = () => {
+  const { user } = useFirebase();
+
+  return user;
+};
+
+export const useAuthentication = () => {
+  const { firebase } = useFirebase();
+
+  return {
+    createUser: (email: string, password: string) => firebase.createUser(email, password), 
+    signIn: (email: string, password: string) => firebase.signIn(email, password), 
+    signOut: () => firebase.signOut(), 
+    changePassword: (password: string) => firebase.changePassword(password), 
+    resetPassword: (email: string) => firebase.resetPassword(email),
+  };
+};
 
 export const useAuthorization = (condition: (user: User) => boolean) => {
   const { firebase } = useFirebase();
