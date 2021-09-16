@@ -73,7 +73,7 @@ const PasswordForgetForm: FC = () => {
         disabled={isInvalid}
         style={{ marginRight: '1rem' }}
       >
-        Reset
+        Reset Password
       </Button>
 
       {state.error && (

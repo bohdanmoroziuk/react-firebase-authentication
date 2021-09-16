@@ -27,7 +27,11 @@ export default class Firebase {
   }
 
   changePassword(password: string) {
-    return this.auth.currentUser?.updatePassword(password);
+    if (this.auth.currentUser) {
+      return this.auth.currentUser.updatePassword(password);
+    }
+
+    return Promise.reject();
   }
 
   onAuthStateChange(listener: (user: unknown) => void) {
